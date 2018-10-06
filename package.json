@@ -1,0 +1,25 @@
+{
+  "name": "messenger",
+  "version": "1.0.0",
+  "description": "it is a messenger",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Liliya-Mironova/front.git"
+  },
+  "author": "Liliya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Liliya-Mironova/front/issues"
+  },
+  "homepage": "https://github.com/Liliya-Mironova/front#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.4",
+    "babel-preset-env": "^1.7.0",
+    "webpack": "^4.20.2"
+  }
+}
