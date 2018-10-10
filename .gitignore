@@ -1,0 +1,8 @@
+dist/
+.idea/
+node_modules/
+venv/
+*.pyc
+*.swo
+*.swp
+
