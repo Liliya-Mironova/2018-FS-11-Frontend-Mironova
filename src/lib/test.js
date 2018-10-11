@@ -1,9 +1,6 @@
-const say = function (name) {
-  //return `Hello ${name}`;
-  var div = document.createElement('div');
-  div.className = "alert alert-success";
+const say = function sayOnTheScreen(name) {
+  const div = document.createElement('div');
   div.innerHTML = `Hello ${name}`;
-  document.body.style.backgroundColor = 'green';
   document.body.appendChild(div);
 };
 
