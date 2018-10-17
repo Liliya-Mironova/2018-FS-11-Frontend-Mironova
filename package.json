@@ -4,7 +4,8 @@
   "description": "it is a messenger",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack -p",
+    "lint": "./node_modules/.bin/eslint ./src/"
   },
   "repository": {
     "type": "git",
@@ -18,10 +19,8 @@
   "homepage": "https://github.com/Liliya-Mironova/front#readme",
   "devDependencies": {
     "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
+    "babel-loader": "^8.0.4",
     "babel-preset-env": "^1.7.0",
-<<<<<<< Updated upstream
-=======
     "css-loader": "^1.0.0",
     "eslint": "^5.7.0",
     "eslint-config-airbnb": "^17.1.0",
@@ -30,7 +29,7 @@
     "eslint-plugin-react": "^7.11.1",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "html-webpack-plugin": "^3.2.0",
->>>>>>> Stashed changes
     "webpack": "^4.20.2"
-  }
+  },
+  "dependencies": {}
 }
