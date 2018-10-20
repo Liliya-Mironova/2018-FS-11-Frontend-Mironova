@@ -1,0 +1,27 @@
+form-input {
+	width: 100%;
+	padding: 23px 23px;
+	box-sizing: border-box;
+	flex: 0 0 auto;
+
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	/*border: none;*/
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.result {
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 14pt;
+	color: black;
+}
+
+input[type=submit] {
+	visibility: collapse;
+}
