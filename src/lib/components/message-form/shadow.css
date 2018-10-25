@@ -7,21 +7,56 @@ form-input {
 	position: absolute;
 	bottom: 0px;
 	right: 0px;
-	/*border: none;*/
+}
+
+input[type=file] {
+	position: absolute;
+	right: 0px;
+	bottom: 80px;
 }
 
 body {
-	display: flex;
-	flex-direction: column;
 	height: 100%;
 }
 
 .result {
+/*	display: flex;
+	flex-direction: column-reverse;*/
+	position: absolute;
+	top: 10px;
+	bottom: 110px;
+	margin: 0;
+	padding: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+	list-style: none;
+	width: 100%;
+}
+
+.result>li {
 	font-family: "Arial Black", Gadget, sans-serif;
 	font-size: 14pt;
 	color: black;
+	padding: 12px 12px 24px 12px;
+	clear: both;
+	border-radius: 10px 10px 0 10px;
+	float: right;
+	background: #00FF7F;
+	position: right;
+	margin: 3px 9px;
+	word-wrap: break-word;
+	word-break: break-all;
 }
 
 input[type=submit] {
 	visibility: collapse;
+}
+
+div[id=drop_zone] {
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 25pt;
+	position: absolute;
+	background: #B9CEF9;
+	left: 5px;
+	bottom: 80px;
 }

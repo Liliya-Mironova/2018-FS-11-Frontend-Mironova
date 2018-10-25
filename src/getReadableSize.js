@@ -9,5 +9,3 @@ function getReadableSize(size) {
   }
   return `${Math.ceil(newSize)} B`;
 }
-
-console.log(getReadableSize(2048));
