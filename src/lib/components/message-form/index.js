@@ -8,6 +8,8 @@ const template = `
 	<form>
 		<input type="file"/>
 		<div id="drop_zone">Drop</div>
+		<button id="location">Geolocation</button>
+		<div id="coords"></div>
 		<ul class="result"></ul>
 		<form-input name="message_text" placeholder="Введите сообщение" slot="message-input">
 			<span slot="icon"></span>
@@ -40,11 +42,15 @@ class MessageForm extends HTMLElement {
 		var message = this.shadowRoot.querySelector('.result');
 		var inputElement = this.shadowRoot.querySelector('input[type=file]');
 		var dropZone = this.shadowRoot.getElementById('drop_zone');
+		var locationButton = this.shadowRoot.getElementById('location');
+		var output = this.shadowRoot.getElementById('coords');
 		this._elements = {
 			form: form,
 			message: message,
 			inputElement: inputElement,
-			dropZone: dropZone
+			dropZone: dropZone,
+			locationButton: locationButton,
+			output: output
 		};
 	}
 
@@ -57,7 +63,32 @@ class MessageForm extends HTMLElement {
  		  this._elements.dropZone.addEventListener(eventName, this._onDragOver.bind(this), false)
 		})
 
+		this._elements.locationButton.addEventListener('click', this._onClick.bind(this));
+
 		//this._elements.inputSlot.addEventListener('slotchange', this._onSlotChange.bind(this));
+	}
+
+	_onClick (event) {
+		event.stopPropagation();
+		event.preventDefault();
+		var output = this._elements.output;
+
+		if (!navigator.geolocation) {
+			output.innerText = "Geolocation is not supported by your browser";
+			return;
+  		}
+
+		function success(position) {
+			var latitude  = position.coords.latitude;
+			var longitude = position.coords.longitude;
+			output.innerText = `${position.coords.latitude}, ${position.coords.longitude}`;
+		};
+
+		function error() {
+			output.inner = "Unable to retrieve your location";
+		};
+
+		navigator.geolocation.getCurrentPosition(success);
 	}
 
 	_onSend (event) {
