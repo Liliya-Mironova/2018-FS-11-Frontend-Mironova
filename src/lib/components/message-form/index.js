@@ -44,7 +44,6 @@ class MessageForm extends HTMLElement {
 		var dropZone = this.shadowRoot.getElementById('drop_zone');
 		var locationButton = this.shadowRoot.getElementById('location');
 		var output = this.shadowRoot.getElementById('coords');
-		const pos = '';
 		this._elements = {
 			form: form,
 			message: message,
