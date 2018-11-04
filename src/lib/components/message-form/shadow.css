@@ -2,26 +2,83 @@ form-input {
 	width: 100%;
 	padding: 23px 23px;
 	box-sizing: border-box;
-	flex: 0 0 auto;
 
 	position: absolute;
 	bottom: 0px;
 	right: 0px;
-	/*border: none;*/
-}
-
-body {
-	display: flex;
-	flex-direction: column;
-	height: 100%;
 }
 
 .result {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 92%;
+	background-color: #CFFFC1;
+
+	display: flex;
+    justify-content: flex-end;
+	flex-direction: column;
+    vertical-align: bottom;
+}
+
+.result>li, .result>img {
 	font-family: "Arial Black", Gadget, sans-serif;
 	font-size: 14pt;
 	color: black;
+	padding: 12px 12px 24px 12px;
+	clear: both;
+	border-radius: 10px 10px 0 10px;
+	float: right;
+	background: #00FF7F;
+	position: right;
+	margin: 3px 9px;
+	word-wrap: break-word;
+	word-break: break-all;
+
+	display: flex;
+	align-self: flex-end;
+	align-items: center;
 }
 
 input[type=submit] {
 	visibility: collapse;
+}
+
+button[id=location] {
+	position: absolute;
+	left: 5px;
+	bottom: 110px;
+	z-index: 555;
+}
+
+div[id=coords] {
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 14pt;
+	position: absolute;
+	left: 5px;
+	bottom: 130px;
+	z-index: 555;
+}
+
+img[id=clip] {
+	position: absolute;
+	right: 12px;
+	bottom: 14px;
+	z-index: 555;
+}
+
+img[id=preview] {
+    height: auto; 
+    width: auto; 
+    max-width: 400px; 
+    max-height: 400px;
+	z-index: 700;
+}
+
+input[type=file] {
+	position: absolute;
+	left: 5px;
+	bottom: 80px;
+	z-index: 600;
 }
