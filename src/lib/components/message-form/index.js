@@ -5,12 +5,11 @@ const slotName = 'message-input';
 
 const template = `
 	<style>${shadowStyles.toString()}</style>
-	<form id="drop_zone">
+	<form>
 		<input type="file"/>
 		<button id="location">Geolocation</button>
-		<div id="coords"></div>
 		<ul class="result"></ul>
-		<img id="clip" src="/home/katze/2018-FS-11-Frontend-Mironova/src/lib/components/message-form/clip.png">
+		<img id="clip" src="clip.png">
 		<form-input name="message_text" placeholder="Введите сообщение" slot="message-input">
 			<span slot="icon"></span>
 		</form-input>
@@ -41,14 +40,12 @@ class MessageForm extends HTMLElement {
 		var form = this.shadowRoot.querySelector('form');
 		var message = this.shadowRoot.querySelector('.result');
 		var inputElement = this.shadowRoot.querySelector('input[type=file]');
-		var dropZone = this.shadowRoot.getElementById('drop_zone');
 		var locationButton = this.shadowRoot.getElementById('location');
 		var output = this.shadowRoot.getElementById('coords');
 		this._elements = {
 			form: form,
 			message: message,
 			inputElement: inputElement,
-			dropZone: dropZone,
 			locationButton: locationButton,
 			output: output
 		};
@@ -60,7 +57,7 @@ class MessageForm extends HTMLElement {
 		this._elements.inputElement.addEventListener('change', this._onFileSelect.bind(this));
 
 		['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
- 		  this._elements.dropZone.addEventListener(eventName, this._onDragOver.bind(this), false)
+ 		  this._elements.form.addEventListener(eventName, this._onDragOver.bind(this), false)
 		})
 
 		this._elements.locationButton.addEventListener('click', this._onClick.bind(this));
@@ -93,12 +90,39 @@ class MessageForm extends HTMLElement {
 
 	_onSend (event) {
 		var li = document.createElement('li');
+		var msg = this._elements.message;
+
 		li.innerText = Array.from(this._elements.form.elements).map(
 			el => el.value
 		).join(' ');
 		if (li.innerText.length > 2) {
 			this._elements.message.appendChild(li);
 		}
+
+		var date = new Date();
+
+		var formData = new FormData();
+		formData.append("user", 'Liliya');
+		formData.append("date", date.toDateString());
+		formData.append("text", li.innerText);
+
+		fetch('http://127.0.0.1:8082/message', {  
+			method: 'POST',   
+			body: formData
+		}).then(function(response) {
+			var img = document.createElement('img');
+			img.id = 'msg_sent';
+			img.src = 'done.png';
+			msg.lastElementChild.appendChild(img);
+
+			var div = document.createElement('div');
+			div.id = 'time';
+			div.innerText = date.toTimeString().match('^([0-1]?[0-9]|[2][0-3]):([0-5][0-9])(:[0-5][0-9])?')[0];
+			msg.lastElementChild.appendChild(div);
+			return response;	
+		}).catch(function(err) { 
+			console.log(err);
+		});
 
 		event.preventDefault();
 		return false;
@@ -125,13 +149,39 @@ class MessageForm extends HTMLElement {
 				msg.appendChild(li);
 			}
     	};
-
 		reader.readAsDataURL(event.target.files[0]);
+
+		var date = new Date();
+		var formData = new FormData();
+		formData.append("user", 'Liliya');
+		formData.append("date", date.toDateString());
+		formData.append("file", event.target.files[0]);
+
+		fetch('http://127.0.0.1:8082/message', {
+		    method: 'POST',  
+		    body: formData
+		}).then(function(response) {
+        	var img = document.createElement('img');
+			img.id = 'msg_sent';
+			img.src = 'done.png';
+			msg.lastElementChild.appendChild(img);
+
+			var div = document.createElement('div');
+			div.id = 'time';
+			div.innerText = date.toTimeString().match('^([0-1]?[0-9]|[2][0-3]):([0-5][0-9])(:[0-5][0-9])?')[0];
+			msg.lastElementChild.appendChild(div);
+        	return response;
+        })
+        .catch(function(err) { 
+        	console.log(err);
+        });
+
 		return false;
 	}
 
 	_onDragOver (event) {
 		event.preventDefault();
+		var msg = this._elements.message;
 			 
 		var files = event.dataTransfer.files;
 		
@@ -142,16 +192,45 @@ class MessageForm extends HTMLElement {
 			    var img = document.createElement("img");
 			    img.id = 'preview';
 			    img.file = file;
-			    this._elements.message.appendChild(img);
+			    msg.appendChild(img);
 			    
 			    var reader = new FileReader();
-			    reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+			    reader.onload = (function(aImg) {
+			    	return function(e) { 
+			    		aImg.src = e.target.result; 
+			    	}; 
+			    })(img);
 			    reader.readAsDataURL(file);
 			} else {
 				var li = document.createElement('li');
-				li.innerText=`${files[0].name}, ${files[0].type}, ${getReadableSize(files[0].size)}`;
-				this._elements.message.appendChild(li);
+				li.innerText=`${file.name}, ${file.type}, ${getReadableSize(file.size)}`;
+				msg.appendChild(li);
 			}
+
+			var date = new Date();
+			var formData = new FormData();
+			formData.append("user", 'Liliya');
+			formData.append("date", date.toDateString());
+			formData.append("file", file);
+
+			fetch('http://127.0.0.1:8082/message', {
+			    method: 'POST',  
+			    body: formData
+			}).then(function(response) {
+		        var img = document.createElement('img');
+				img.id = 'msg_sent';
+				img.src = 'done.png';
+				msg.lastElementChild.appendChild(img);
+
+				var div = document.createElement('div');
+				div.id = 'time';
+				div.innerText = date.toTimeString().match('^([0-1]?[0-9]|[2][0-3]):([0-5][0-9])(:[0-5][0-9])?')[0];
+				msg.lastElementChild.appendChild(div);
+		        return response;
+		    })
+		    .catch(function(err) { 
+		        console.log(err);
+		    });
 		}
 	}
 

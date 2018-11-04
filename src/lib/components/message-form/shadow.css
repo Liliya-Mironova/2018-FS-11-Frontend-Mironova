@@ -41,6 +41,12 @@ form-input {
 	align-items: center;
 }
 
+.result>li>div[id='time'] {
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 10pt;
+	color: grey;
+}
+
 input[type=submit] {
 	visibility: collapse;
 }
@@ -74,6 +80,10 @@ img[id=preview] {
     max-width: 400px; 
     max-height: 400px;
 	z-index: 700;
+}
+
+img[id=msg_sent] {
+	z-index: 1000;
 }
 
 input[type=file] {
