@@ -1,257 +1,211 @@
-//import styles from './index.css';
-import shadowStyles from './shadow.css';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import {FormInput} from '../form/-input/index.js';
+import {getReadableSize} from './getreadablesize.js';
+
+import './shadow.css';
 
 const slotName = 'message-input';
 
-const template = `
-	<style>${shadowStyles.toString()}</style>
-	<form>
-		<input type="file"/>
-		<button id="location">Geolocation</button>
-		<ul class="result"></ul>
-		<img id="clip" src="clip.png">
-		<form-input name="message_text" placeholder="Введите сообщение" slot="message-input">
-			<span slot="icon"></span>
-		</form-input>
-	</form>
-`;
 
-class MessageForm extends HTMLElement {
-	constructor () {
-		super();
-		const shadowRoot = this.attachShadow({mode: 'open'});
-		shadowRoot.innerHTML = template;
-		this._initElements();
-		this._addHandlers();
-	}
+export class MessageForm extends React.Component {
+    constructor (props) {
+        super(props);
+        this.state = { 
+            timeRegex: '^([0-1]?[0-9]|[2][0-3]):([0-5][0-9])(:[0-5][0-9])?'
+        };
+    }
 
-	static get observedAttributes() {
-		return [
-			"action",
-			"method"
-		]
-	}
+    _onSend (event) {
+        if (event.key == 'Enter') {
+            var li = document.createElement('li');
+            var msg = this.refs.Ul;
 
-	attributeChangedCallback(attrName, oldVal, newVal) {
-		this._elements.form[attrName] = newVal;
-	}
+            li.innerText = this.refs.FormInput.state.val;
+            if (li.innerText.length > 2) {
+                msg.appendChild(li);
+            }
 
-	_initElements () {
-		var form = this.shadowRoot.querySelector('form');
-		var message = this.shadowRoot.querySelector('.result');
-		var inputElement = this.shadowRoot.querySelector('input[type=file]');
-		var locationButton = this.shadowRoot.getElementById('location');
-		var output = this.shadowRoot.getElementById('coords');
-		this._elements = {
-			form: form,
-			message: message,
-			inputElement: inputElement,
-			locationButton: locationButton,
-			output: output
-		};
-	}
+            var date = new Date();
 
-	_addHandlers () {
-		this._elements.form.addEventListener('send', this._onSend.bind(this));
-		this._elements.form.addEventListener('keypress', this._onKeyPress.bind(this));
-		this._elements.inputElement.addEventListener('change', this._onFileSelect.bind(this));
+            var formData = new FormData();
+            var tRegex = this.state.timeRegex;
+            formData.append("user", 'Liliya');
+            formData.append("date", date.toDateString());
+            formData.append("text", li.innerText);
 
-		['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
- 		  this._elements.form.addEventListener(eventName, this._onDragOver.bind(this), false)
-		})
+            fetch('http://127.0.0.1:8082/message', {  
+                method: 'POST',   
+                body: formData
+            }).then(function(response) {
+                var img = document.createElement('img', {className: 'Msg_send'});
+                img.src = 'done.png';
+                msg.lastElementChild.appendChild(img);
 
-		this._elements.locationButton.addEventListener('click', this._onClick.bind(this));
+                var div = document.createElement('div');
+                div.id = 'time';
+                div.innerText = date.toTimeString().match(tRegex)[0];
+                msg.lastElementChild.appendChild(div);
+                return response;    
+            }).catch(function(err) { 
+                console.log(err);
+            });
 
-		//this._elements.inputSlot.addEventListener('slotchange', this._onSlotChange.bind(this));
-	}
+            event.preventDefault();
+            return false;
+        }
+    }
 
-	_onClick (event) {
-		event.preventDefault();
-		var output = this._elements.output;
-		var li = document.createElement('li');
-		var msg = this._elements.message;
+    _onFileSelect (event) {
+        event.preventDefault();
+        var msg = this.refs.Ul;
 
-		if (!navigator.geolocation) {
-			output.innerText = "Geolocation is not supported by your browser";
-			return;
-  		}
+        var files = event.target.files;
+        var file_type = files[0].type;
 
-		function success(position) {
-			li.innerText = `${position.coords.latitude}, ${position.coords.longitude}`;
-			msg.appendChild(li);
-		};
+        var reader = new FileReader();
 
-		function error() {
-			output.inner = "Unable to retrieve your location";
-		};
+        reader.onload = function(){
+            if (file_type.startsWith('image/')) {
+                var img = document.createElement('img');
+                img.src = reader.result;
+                msg.appendChild(img);
+            } else {
+                var li = document.createElement('li');
+                li.innerText=`${files[0].name}, ${files[0].type}, ${getReadableSize(files[0].size)}`;
+                msg.appendChild(li);
+            }
+        };
+        reader.readAsDataURL(event.target.files[0]);
 
-		navigator.geolocation.getCurrentPosition(success);
-	}
+        var date = new Date();
+        var formData = new FormData();
+        var tRegex = this.state.timeRegex;
+        formData.append("user", 'Liliya');
+        formData.append("date", date.toDateString());
+        formData.append("file", event.target.files[0]);
 
-	_onSend (event) {
-		var li = document.createElement('li');
-		var msg = this._elements.message;
+        fetch('http://127.0.0.1:8082/message', {
+            method: 'POST',  
+            body: formData
+        }).then(function(response) {
+            var img = document.createElement('img', {className: 'Msg_sent'});
+            img.src = 'done.png';
+            msg.lastElementChild.appendChild(img);
 
-		li.innerText = Array.from(this._elements.form.elements).map(
-			el => el.value
-		).join(' ');
-		if (li.innerText.length > 2) {
-			this._elements.message.appendChild(li);
-		}
-
-		var date = new Date();
-
-		var formData = new FormData();
-		formData.append("user", 'Liliya');
-		formData.append("date", date.toDateString());
-		formData.append("text", li.innerText);
-
-		fetch('http://127.0.0.1:8082/message', {  
-			method: 'POST',   
-			body: formData
-		}).then(function(response) {
-			var img = document.createElement('img');
-			img.id = 'msg_sent';
-			img.src = 'done.png';
-			msg.lastElementChild.appendChild(img);
-
-			var div = document.createElement('div');
-			div.id = 'time';
-			div.innerText = date.toTimeString().match('^([0-1]?[0-9]|[2][0-3]):([0-5][0-9])(:[0-5][0-9])?')[0];
-			msg.lastElementChild.appendChild(div);
-			return response;	
-		}).catch(function(err) { 
-			console.log(err);
-		});
-
-		event.preventDefault();
-		return false;
-	}
-
-	_onFileSelect (event) {
-		event.preventDefault();
-		var msg = this._elements.message;
-
-		var files = event.target.files;
-		var file_type = files[0].type;
-
-		var reader = new FileReader();
-
-		reader.onload = function(){
-			if (file_type.startsWith('image/')) {
-				var img = document.createElement('img');
-				img.id = 'preview';
-				img.src = reader.result;
-				msg.appendChild(img);
-			} else {
-				var li = document.createElement('li');
-				li.innerText=`${files[0].name}, ${files[0].type}, ${getReadableSize(files[0].size)}`;
-				msg.appendChild(li);
-			}
-    	};
-		reader.readAsDataURL(event.target.files[0]);
-
-		var date = new Date();
-		var formData = new FormData();
-		formData.append("user", 'Liliya');
-		formData.append("date", date.toDateString());
-		formData.append("file", event.target.files[0]);
-
-		fetch('http://127.0.0.1:8082/message', {
-		    method: 'POST',  
-		    body: formData
-		}).then(function(response) {
-        	var img = document.createElement('img');
-			img.id = 'msg_sent';
-			img.src = 'done.png';
-			msg.lastElementChild.appendChild(img);
-
-			var div = document.createElement('div');
-			div.id = 'time';
-			div.innerText = date.toTimeString().match('^([0-1]?[0-9]|[2][0-3]):([0-5][0-9])(:[0-5][0-9])?')[0];
-			msg.lastElementChild.appendChild(div);
-        	return response;
+            var div = document.createElement('div');
+            div.id = 'time';
+            div.innerText = date.toTimeString().match(tRegex)[0];
+            msg.lastElementChild.appendChild(div);
+            return response;
         })
         .catch(function(err) { 
-        	console.log(err);
+            console.log(err);
         });
 
-		return false;
-	}
+        return false;
+    }
 
-	_onDragOver (event) {
-		event.preventDefault();
-		var msg = this._elements.message;
-			 
-		var files = event.dataTransfer.files;
-		
-		for (var i = 0; i < files.length; i++) {
-		    var file = files[i];
-		    
-		    if (file.type.startsWith('image/')) {
-			    var img = document.createElement("img");
-			    img.id = 'preview';
-			    img.file = file;
-			    msg.appendChild(img);
-			    
-			    var reader = new FileReader();
-			    reader.onload = (function(aImg) {
-			    	return function(e) { 
-			    		aImg.src = e.target.result; 
-			    	}; 
-			    })(img);
-			    reader.readAsDataURL(file);
-			} else {
-				var li = document.createElement('li');
-				li.innerText=`${file.name}, ${file.type}, ${getReadableSize(file.size)}`;
-				msg.appendChild(li);
-			}
+    _onLocationClick (event) {
+        event.preventDefault();
+        var output = this.refs.Coords;
+        var li = document.createElement('li');
+        var msg = this.refs.Ul;
 
-			var date = new Date();
-			var formData = new FormData();
-			formData.append("user", 'Liliya');
-			formData.append("date", date.toDateString());
-			formData.append("file", file);
+        if (!navigator.geolocation) {
+            output.innerText = "Geolocation is not supported by your browser";
+            return;
+        }
 
-			fetch('http://127.0.0.1:8082/message', {
-			    method: 'POST',  
-			    body: formData
-			}).then(function(response) {
-		        var img = document.createElement('img');
-				img.id = 'msg_sent';
-				img.src = 'done.png';
-				msg.lastElementChild.appendChild(img);
+        function success(position) {
+            li.innerText = `${position.coords.latitude}, ${position.coords.longitude}`;
+            msg.appendChild(li);
+        };
 
-				var div = document.createElement('div');
-				div.id = 'time';
-				div.innerText = date.toTimeString().match('^([0-1]?[0-9]|[2][0-3]):([0-5][0-9])(:[0-5][0-9])?')[0];
-				msg.lastElementChild.appendChild(div);
-		        return response;
-		    })
-		    .catch(function(err) { 
-		        console.log(err);
-		    });
-		}
-	}
+        function error() {
+            output.inner = "Unable to retrieve your location";
+        };
 
-	_onKeyPress (event) {
-		if (event.keyCode == 13) {
-			this._elements.form.dispatchEvent(new CustomEvent('send'));
-		}
-	}
+        navigator.geolocation.getCurrentPosition(success);
+    }
+
+    _onDragOver (event) {
+        event.preventDefault();
+        var msg = this.refs.Ul;
+             
+        var files = event.dataTransfer.files;
+        
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            
+            if (file.type.startsWith('image/')) {
+                var img = document.createElement("img", {className: 'Msg_sent'}); 
+                img.file = file;
+                msg.appendChild(img);
+                
+                var reader = new FileReader();
+                reader.onload = (function(aImg) {
+                    return function(e) { 
+                        aImg.src = e.target.result; 
+                    }; 
+                })(img);
+                reader.readAsDataURL(file);
+            } else {
+                var li = document.createElement('li');
+                li.innerText=`${file.name}, ${file.type}, ${getReadableSize(file.size)}`;
+                msg.appendChild(li);
+            }
+
+            var date = new Date();
+            var formData = new FormData();
+            var tRegex = this.state.timeRegex;
+            formData.append("user", 'Liliya');
+            formData.append("date", date.toDateString());
+            formData.append("file", file);
+
+            fetch('http://127.0.0.1:8082/message', {
+                method: 'POST',  
+                body: formData
+            }).then(function(response) {
+                var img = document.createElement('img', {className: 'Msg_sent'});
+                img.src = 'done.png';
+                msg.lastElementChild.appendChild(img);
+
+                var div = document.createElement('div');
+                div.id = 'time';
+                div.innerText = date.toTimeString().match(tRegex)[0];
+                msg.lastElementChild.appendChild(div);
+                return response;
+            })
+            .catch(function(err) { 
+                console.log(err);
+            });
+        }
+    }
+
+    render() {
+        return (
+            <div className="Wrap">
+                <ul className="Result" ref="Ul"
+                                        onDrop={this._onDragOver.bind(this)}
+                                        onDragEnter={this._onDragOver.bind(this)}
+                                        onDragOver={this._onDragOver.bind(this)}
+                                        onDragLeave={this._onDragOver.bind(this)}></ul>
+                <form className="FInput" onKeyPress={this._onSend.bind(this)}>
+                    <input type="file" className="File" onChange={this._onFileSelect.bind(this)} />
+                    <button className="Location" onClick={this._onLocationClick.bind(this)}>Geolocation</button>
+                    <img className="Clip" src="clip.png" />
+                    <div className="Coords" ref="Coords" />
+                    <FormInput ref="FormInput" placeholder="Введите сообщение" slot="message-input">
+                        <span slot="icon"></span>
+                    </FormInput>
+                </form>
+            </div>
+        );
+    }
 }
 
-customElements.define('message-form', MessageForm);
-
-
-function getReadableSize(size) {
-  const arr = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB'];
-  let newSize = size;
-  for (const item in arr) {
-      if (newSize < 1024) {
-        return `${Math.ceil(newSize)} ${arr[item]}`;
-      }
-      newSize /= 1024;
-  }
-  return `${Math.ceil(newSize)} B`;
-}
+ReactDOM.render(
+    <MessageForm action="/"></MessageForm>, document.querySelector('div')
+);
