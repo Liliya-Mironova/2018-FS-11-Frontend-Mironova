@@ -4,3 +4,7 @@
 	width: calc(100% - 2px);
 	font-size: 14pt;
 }
+
+.Pseudo {
+	visibility: hidden;
+}

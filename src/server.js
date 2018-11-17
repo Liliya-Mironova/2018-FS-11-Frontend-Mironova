@@ -25,7 +25,7 @@ app.post('/message', function(req, res) {
         console.log(filename);
 
         result = new Promise((resolve, reject) => {
-            sampleFile.mv('./dist/files' + filename, function (err) {
+            sampleFile.mv('../Downloads/' + filename, function (err) {
                 if (err) reject(err);
                 else resolve();
             });

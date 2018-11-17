@@ -1,0 +1,43 @@
+.MessageForm {
+	width: 100%;
+	padding: 23px 23px;
+	box-sizing: border-box;
+
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+
+	display: inline-block;
+	border: 1px solid rgba(25, 25, 25, 0.32);
+	background-color: white;
+}
+
+.FileButton {
+	position: absolute;
+	left: 5px;
+	bottom: 94px;
+	z-index: 600;
+}
+
+.LocationButton {
+	position: absolute;
+	left: 5px;
+	bottom: 124px;
+	z-index: 555;
+}
+
+.CoordsLabel {
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 14pt;
+	position: absolute;
+	left: 5px;
+	bottom: 130px;
+	z-index: 555;
+}
+
+.ClipImg {
+	position: absolute;
+	right: 12px;
+	bottom: 14px;
+	z-index: 555;
+}
