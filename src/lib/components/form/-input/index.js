@@ -1,62 +1,33 @@
-import styles from './index.css';
-import shadowStyles from './shadow.css';
+import React from 'react';
 
-const template = `
-	<style>${shadowStyles.toString()}</style>
-	<input />
-	<slot name="icon"></slot>
-`;
+import './index.css';
+import './shadow.css';
 
-//const iconTemplate = `
-//	<div class="${styles.icon}" />
-//`;
 
-class FormInput extends HTMLElement {
-	constructor () {
-		super();
-		const shadowRoot = this.attachShadow({mode: 'open'});
-		shadowRoot.innerHTML = template;
-		this._initElements();
-		this._addHandlers();
-	}
+export class FormInput extends React.Component {  
+    constructor(props) {
+        super(props);
+        this.state = { 
+            val: ''
+        };
+    }
 
-	static get observedAttributes() {
-		return [
-			"name",
-			"placeholder",
-			"value",
-			"disabled"
-		]
-	}
+    _onKeyPress(event) {
+        if (event.key == 'Enter') {
+            event.target.value = '';
+        }
+    }
 
-	attributeChangedCallback(attrName, oldVal, newVal) {
-		this._elements.input[attrName] = newVal;
-	}
+    _onInput (event) {
+        this.setState({val: event.target.value});
+    }
 
-	_initElements () {
-		var hiddenInput = document.createElement('input');
-		var input = this.shadowRoot.querySelector('input');
-		this.appendChild(hiddenInput);
-		this._elements = {
-			input: input,
-			hiddenInput: hiddenInput
-		};
-	}
-
-	_addHandlers () {
-		this._elements.input.addEventListener('input', this._onInput.bind(this));
-		this._elements.input.addEventListener('keypress', this._onKeyPress.bind(this));
-	}
-
-	_onKeyPress(event) {
-		if (event.keyCode === 13) {
-			this._elements.input.value = '';
-		}
-	}
-
-	_onInput () {
-		this._elements.hiddenInput.value = this._elements.input.value;
-	}
+    render() {
+        return (
+            <input className="Input" 
+                   placeholder="Введите сообщение" 
+                   onInput={this._onInput.bind(this)} 
+                   onKeyPress={this._onKeyPress.bind(this)} />
+        );  
+    }
 }
-
-customElements.define('form-input', FormInput);
