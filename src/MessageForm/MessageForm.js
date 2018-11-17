@@ -53,9 +53,9 @@ class MessageForm extends Component {
         return (
             <div>
                 <button className="LocationButton" onClick={this._onLocationClick.bind(this)}>
-                    Geolocation
+                    <img src="../img/location.png" />
                 </button>
-                <input type="file" className="FileButton" onChange={this._onFileSelect.bind(this)}/>
+                <input type="file" className="FileButton" onChange={this._onFileSelect.bind(this)} />
                 <form className="MessageForm">
                     <FormInput updateData={this.updateData.bind(this)} />
                 </form>

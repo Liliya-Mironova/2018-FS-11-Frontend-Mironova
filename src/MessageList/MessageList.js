@@ -9,7 +9,8 @@ class MessageList extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            msg_list: []
+            msg_list: [],
+            iter: 0
         };
     }
 
@@ -44,7 +45,8 @@ class MessageList extends Component {
                                               time={this.props.time}
                                               img={this.props.img}
                                               done={this.props.done}
-                                              key={this.props.text+this.props.time+this.props.img+Math.random()}/>);
+                                              key={this.state.iter}/>);
+            this.state.iter += 1;
         }
 
         return (

@@ -29,10 +29,12 @@ class FormInput extends Component {
     render() {
         return (
             <div>
-            <input className="Input" 
-                   placeholder="Введите сообщение" 
-                   onInput={this._onInput.bind(this)} />
-            <button onClick={this._onSubmit.bind(this)} />
+                <input className="Input" 
+                       placeholder="Введите сообщение" 
+                       onInput={this._onInput.bind(this)} />
+                <button className="SendButton" onClick={this._onSubmit.bind(this)}>
+                    <img src="../img/send.png" />
+                </button>
             </div>
         );  
     }

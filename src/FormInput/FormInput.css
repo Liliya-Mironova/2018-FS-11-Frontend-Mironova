@@ -5,6 +5,15 @@
 	font-size: 14pt;
 }
 
+.SendButton {
+	position: absolute;
+	right: 12px;
+	bottom: 21px;
+	max-width: 28px; 
+    max-height: 28px;
+	z-index: 555;
+}
+
 .Pseudo {
 	visibility: hidden;
 }

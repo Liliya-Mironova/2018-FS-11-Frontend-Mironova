@@ -34,6 +34,5 @@ export function sendToServer (file, text) {
         return response;
     }).catch (function(err) { 
         console.log(err);
-        console.log('no!')
     });
 }
