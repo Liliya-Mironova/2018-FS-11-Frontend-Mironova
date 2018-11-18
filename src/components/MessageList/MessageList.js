@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './MessageList.css';
 
 import Message from '../Message/Message.js';
-import {getTime, getReadableSize, sendToServer} from '../../library.js';
+import {getReadableSize, sendToServer, getTime} from '../../library.js';
 
 class MessageList extends Component {
     constructor(props) {
@@ -26,10 +26,10 @@ class MessageList extends Component {
             reader.onload = function() {
                 if (file.type.startsWith('image/')) {
                     text = reader.result;
-                    this_ptr.props.updateData('', getTime(), text); // кнопка меняет состояние App
+                    this_ptr.props.updateData('', text); // кнопка меняет состояние App
                 } else {
                     text =`${file.name}, ${file.type}, ${getReadableSize(file.size)}`; 
-                    this_ptr.props.updateData(text, getTime(), '');           
+                    this_ptr.props.updateData(text, '');           
                 }
             };
             reader.readAsDataURL(file);
@@ -39,8 +39,8 @@ class MessageList extends Component {
     render() {
         if (this.props.text !== '' || this.props.img !== '') {
             this.state.msg_list.push(<Message id={this.props.id}
-                                              text={this.props.text} 
-                                              time={this.props.time}
+                                              text={this.props.text}
+                                              time={getTime()}
                                               img={this.props.img}
                                               done={this.props.done}
                                               key={this.props.id}/>);

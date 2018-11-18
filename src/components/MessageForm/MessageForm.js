@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './MessageForm.css';
 
 import FormInput from '../FormInput/FormInput.js';
-import {getTime, getReadableSize, sendToServer} from '../../library.js';
+import {getReadableSize, sendToServer} from '../../library.js';
 
 class MessageForm extends Component {
     constructor (props) {
@@ -13,8 +13,8 @@ class MessageForm extends Component {
         };
     }
 
-    updateData (id, value, time) {
-        this.props.updateData(id, value, time, '');
+    updateData (id, value) {
+        this.props.updateData(id, value, '');
         this.setState({id: this.state.id+1});
     }
 
@@ -27,7 +27,7 @@ class MessageForm extends Component {
         }
         function success (position) {
             var text = `${position.coords.latitude}, ${position.coords.longitude}`;
-            this.props.updateData(this.state.id, text, getTime(), '');
+            this.props.updateData(this.state.id, text, '');
         };
         function error() {
             alert("Unable to retrieve your location");
@@ -46,11 +46,11 @@ class MessageForm extends Component {
         reader.onload = function() {
             if (file.type.startsWith('image/')) {
                 text = reader.result;
-                this_ptr.props.updateData(this_ptr.state.id+1, '', getTime(), text); // кнопка меняет состояние App
+                this_ptr.props.updateData(this_ptr.state.id+1, '', text); // кнопка меняет состояние App
 
             } else {
                 text =`${file.name}, ${file.type}, ${getReadableSize(file.size)}`; 
-                this_ptr.props.updateData(this_ptr.state.id+1, text, getTime(), '');           
+                this_ptr.props.updateData(this_ptr.state.id+1, text, '');           
             }
             this_ptr.setState({id: this_ptr.state.id+1})
         };

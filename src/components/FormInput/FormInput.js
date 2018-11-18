@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 
 import './FormInput.css';
-
-import {getTime, sendToServer} from '../../library.js';
+import {sendToServer} from '../../library.js';
 
 class FormInput extends Component {
     constructor (props) {
@@ -16,7 +15,7 @@ class FormInput extends Component {
     _onSubmit (event) {
         event.preventDefault();
         if (this.state.val !== '') {
-            this.props.updateData(this.props.id+1, this.state.val, getTime(), ''); // меняет состояние MessageForm
+            this.props.updateData(this.props.id+1, this.state.val, ''); // меняет состояние MessageForm
             //sendToServer('', this.state.val);
             this.setState({id: this.props.id+1, val: ''});
         }
