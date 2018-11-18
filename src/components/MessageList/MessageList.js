@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './MessageList.css';
 
 import Message from '../Message/Message.js';
-import {getReadableSize, sendToServer, getTime} from '../../library.js';
+import {getTime} from '../../library.js';
 
 class MessageList extends Component {
     constructor(props) {
@@ -16,7 +16,6 @@ class MessageList extends Component {
     _onDragOver (event) {
         event.preventDefault();
 
-        var text = '';
         var this_ptr = this;
 
         var files = event.dataTransfer.files;
@@ -25,11 +24,9 @@ class MessageList extends Component {
             var reader = new FileReader();
             reader.onload = function() {
                 if (file.type.startsWith('image/')) {
-                    text = reader.result;
-                    this_ptr.props.updateData('', text); // кнопка меняет состояние App
+                    this_ptr.props.updateData(this_ptr.state.id+1, '', reader.result, file); // кнопка меняет состояние App
                 } else {
-                    text =`${file.name}, ${file.type}, ${getReadableSize(file.size)}`; 
-                    this_ptr.props.updateData(text, '');           
+                    this_ptr.props.updateData(this_ptr.state.id+1, '', '', file);           
                 }
             };
             reader.readAsDataURL(file);
@@ -37,13 +34,15 @@ class MessageList extends Component {
     }
     
     render() {
-        if (this.props.text !== '' || this.props.img !== '') {
+        if (this.props.text || this.props.img || this.props.file) {
             this.state.msg_list.push(<Message id={this.props.id}
                                               text={this.props.text}
                                               time={getTime()}
                                               img={this.props.img}
+                                              file={this.props.file}
                                               done={this.props.done}
-                                              key={this.props.id}/>);
+                                              key={this.props.id} />
+                                    );
         }
 
         return (

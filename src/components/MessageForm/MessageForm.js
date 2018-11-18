@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './MessageForm.css';
 
 import FormInput from '../FormInput/FormInput.js';
-import {getReadableSize, sendToServer} from '../../library.js';
 
 class MessageForm extends Component {
     constructor (props) {
@@ -13,8 +12,8 @@ class MessageForm extends Component {
         };
     }
 
-    updateData (id, value) {
-        this.props.updateData(id, value, '');
+    updateData (id, text) {
+        this.props.updateData(id, text, '');
         this.setState({id: this.state.id+1});
     }
 
@@ -27,7 +26,7 @@ class MessageForm extends Component {
         }
         function success (position) {
             var text = `${position.coords.latitude}, ${position.coords.longitude}`;
-            this.props.updateData(this.state.id, text, '');
+            this.props.updateData(this.state.id, text, '', '');
         };
         function error() {
             alert("Unable to retrieve your location");
@@ -38,21 +37,17 @@ class MessageForm extends Component {
     _onFileSelect (event) {
         event.preventDefault();
 
-        var text = '';
         var this_ptr = this;
 
         var file = event.target.files[0];
         var reader = new FileReader();
         reader.onload = function() {
             if (file.type.startsWith('image/')) {
-                text = reader.result;
-                this_ptr.props.updateData(this_ptr.state.id+1, '', text); // кнопка меняет состояние App
-
+                this_ptr.props.updateData(this_ptr.state.id+1, '', reader.result, ''); // кнопка меняет состояние App
             } else {
-                text =`${file.name}, ${file.type}, ${getReadableSize(file.size)}`; 
-                this_ptr.props.updateData(this_ptr.state.id+1, text, '');           
+                this_ptr.props.updateData(this_ptr.state.id+1, '', '', file);           
             }
-            this_ptr.setState({id: this_ptr.state.id+1})
+            this_ptr.setState({id: this_ptr.state.id+1});
         };
         reader.readAsDataURL(file);
     }

@@ -16,11 +16,11 @@ export function getTime () {
     return date.toTimeString().match(tRegex)[0];
 }
 
-export function sendToServer (file, text) {
+export function sendToServer (text, file) {
     var formData = new FormData();
     formData.append("user", 'Liliya');
     formData.append("date", `${getTime()} ${(new Date()).toDateString()}`);
-    if (text === '') {
+    if (file) {
         formData.append("file", file);
     } else {
         formData.append("text", text);
@@ -30,7 +30,6 @@ export function sendToServer (file, text) {
                method: 'POST',  
                body: formData
            }).then (function(response) {
-               //this_ptr.props.updateData(text, getTime(), '');
                return response;
            }).catch (function(err) { 
                console.log(err);

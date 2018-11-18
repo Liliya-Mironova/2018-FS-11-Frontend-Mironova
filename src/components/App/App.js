@@ -11,12 +11,12 @@ class App extends Component {
             id: 0,
             text: '',
             img: '',
-            done: false
+            file: ''
         };
     }
 
-    updateData (id, value, img, done) {
-        this.setState({id: id, text: value, img: img, done: done});
+    updateData (id, text, img, file) {
+        this.setState({id: id, text: text, img: img, file: file});
     }
 
     render() {
@@ -24,7 +24,8 @@ class App extends Component {
             <div className="App">
                 <MessageList id={this.state.id}
                              text={this.state.text}
-                             img={this.state.img}  
+                             img={this.state.img}
+                             file={this.state.file}
                              updateData={this.updateData.bind(this)} />
                 <MessageForm updateData={this.updateData.bind(this)} />
             </div>
