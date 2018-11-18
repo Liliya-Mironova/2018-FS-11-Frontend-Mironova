@@ -1,4 +1,4 @@
-export function getReadableSize(size) {
+export function getReadableSize (size) {
     const arr = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB'];
     let newSize = size;
     for (const item in arr) {
@@ -26,13 +26,13 @@ export function sendToServer (file, text) {
         formData.append("text", text);
     }
 
-    fetch ('http://127.0.0.1:8082/message', {
-        method: 'POST',  
-        body: formData
-    }).then (function(response) {
-        //this_ptr.props.updateData(text, getTime(), '');
-        return response;
-    }).catch (function(err) { 
-        console.log(err);
-    });
+    return fetch ('http://127.0.0.1:8082/message', {
+               method: 'POST',  
+               body: formData
+           }).then (function(response) {
+               //this_ptr.props.updateData(text, getTime(), '');
+               return response;
+           }).catch (function(err) { 
+               console.log(err);
+           });
 }

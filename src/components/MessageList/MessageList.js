@@ -3,14 +3,13 @@ import React, { Component } from 'react';
 import './MessageList.css';
 
 import Message from '../Message/Message.js';
-import {getTime, getReadableSize, sendToServer} from '../library.js';
+import {getTime, getReadableSize, sendToServer} from '../../library.js';
 
 class MessageList extends Component {
     constructor(props) {
         super(props);
-        this.state = { 
-            msg_list: [],
-            iter: 0
+        this.state = {
+            msg_list: []
         };
     }
 
@@ -34,19 +33,17 @@ class MessageList extends Component {
                 }
             };
             reader.readAsDataURL(file);
-
-            sendToServer(file, '');
         }
     }
     
     render() {
         if (this.props.text !== '' || this.props.img !== '') {
-            this.state.msg_list.push(<Message text={this.props.text} 
+            this.state.msg_list.push(<Message id={this.props.id}
+                                              text={this.props.text} 
                                               time={this.props.time}
                                               img={this.props.img}
                                               done={this.props.done}
-                                              key={this.state.iter}/>);
-            this.state.iter += 1;
+                                              key={this.props.id}/>);
         }
 
         return (

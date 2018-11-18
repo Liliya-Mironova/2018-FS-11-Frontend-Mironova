@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 
 import './FormInput.css';
 
-import {getTime, sendToServer} from '../library.js';
+import {getTime, sendToServer} from '../../library.js';
 
 class FormInput extends Component {
     constructor (props) {
         super(props);
-        this.state = { 
+        this.state = {
+            id: 0,
             val: ''
         };
     }
@@ -15,10 +16,9 @@ class FormInput extends Component {
     _onSubmit (event) {
         event.preventDefault();
         if (this.state.val !== '') {
-            this.props.updateData(this.state.val, getTime(), ''); // меняет состояние MessageForm
-            sendToServer('', this.state.val);
-            this.setState({val: ''});
-            event.target.value = '';
+            this.props.updateData(this.props.id+1, this.state.val, getTime(), ''); // меняет состояние MessageForm
+            //sendToServer('', this.state.val);
+            this.setState({id: this.props.id+1, val: ''});
         }
     }
 
@@ -31,9 +31,10 @@ class FormInput extends Component {
             <div>
                 <input className="Input" 
                        placeholder="Введите сообщение" 
-                       onInput={this._onInput.bind(this)} />
+                       onInput={this._onInput.bind(this)} 
+                       value={this.state.val} />
                 <button className="SendButton" onClick={this._onSubmit.bind(this)}>
-                    <img src="../img/send.png" />
+                    <img src="../img/send.png" alt='' />
                 </button>
             </div>
         );  

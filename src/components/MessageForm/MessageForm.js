@@ -3,11 +3,19 @@ import React, { Component } from 'react';
 import './MessageForm.css';
 
 import FormInput from '../FormInput/FormInput.js';
-import {getTime, getReadableSize, sendToServer} from '../library.js';
+import {getTime, getReadableSize, sendToServer} from '../../library.js';
 
 class MessageForm extends Component {
-    updateData (value, time) {
-        this.props.updateData(value, time, '');
+    constructor (props) {
+        super(props);
+        this.state = {
+            id: 0
+        };
+    }
+
+    updateData (id, value, time) {
+        this.props.updateData(id, value, time, '');
+        this.setState({id: this.state.id+1});
     }
 
     _onLocationClick (event) {
@@ -19,7 +27,7 @@ class MessageForm extends Component {
         }
         function success (position) {
             var text = `${position.coords.latitude}, ${position.coords.longitude}`;
-            this.props.updateData(text, getTime(), '');
+            this.props.updateData(this.state.id, text, getTime(), '');
         };
         function error() {
             alert("Unable to retrieve your location");
@@ -38,26 +46,26 @@ class MessageForm extends Component {
         reader.onload = function() {
             if (file.type.startsWith('image/')) {
                 text = reader.result;
-                this_ptr.props.updateData('', getTime(), text); // кнопка меняет состояние App
+                this_ptr.props.updateData(this_ptr.state.id+1, '', getTime(), text); // кнопка меняет состояние App
+
             } else {
                 text =`${file.name}, ${file.type}, ${getReadableSize(file.size)}`; 
-                this_ptr.props.updateData(text, getTime(), '');           
+                this_ptr.props.updateData(this_ptr.state.id+1, text, getTime(), '');           
             }
+            this_ptr.setState({id: this_ptr.state.id+1})
         };
         reader.readAsDataURL(file);
-
-        sendToServer(file, '');
     }
 
     render() {
         return (
             <div>
                 <button className="LocationButton" onClick={this._onLocationClick.bind(this)}>
-                    <img src="../img/location.png" />
+                    <img src="../img/location.png" alt=''/>
                 </button>
                 <input type="file" className="FileButton" onChange={this._onFileSelect.bind(this)} />
                 <form className="MessageForm">
-                    <FormInput updateData={this.updateData.bind(this)} />
+                    <FormInput id={this.state.id} updateData={this.updateData.bind(this)} />
                 </form>
             </div>
         );

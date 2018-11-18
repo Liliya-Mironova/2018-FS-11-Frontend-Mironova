@@ -5,7 +5,7 @@ import './Message.css';
 class Message extends Component {
     constructor (props) {
         super(props);
-        this.state = { 
+        this.state = {
             done: false
         };
     }
@@ -13,7 +13,7 @@ class Message extends Component {
     render() {
         if (this.props.img !== '') {
             return (
-                <img className='Img' src={this.props.img} />
+                <img className='Img' src={this.props.img} alt=''/>
             );
         } else {
             return (

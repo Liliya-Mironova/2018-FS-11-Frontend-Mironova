@@ -8,6 +8,7 @@ class App extends Component {
 	constructor(props) {
         super(props);
         this.state = { 
+            id: 0,
             text: '',
             time: '',
             img: '',
@@ -15,14 +16,15 @@ class App extends Component {
         };
     }
 
-	updateData (value, time, img, done) {
-		this.setState({text: value, time: time, img: img, done: done});
+	updateData (id, value, time, img, done) {
+		this.setState({id: id, text: value, time: time, img: img, done: done});
 	}
 
     render() {
         return (
             <div className="App">
-            	<MessageList text={this.state.text}
+            	<MessageList id={this.state.id}
+                             text={this.state.text}
             				 time={this.state.time}
             				 img={this.state.img}  
                              updateData={this.updateData.bind(this)} />
