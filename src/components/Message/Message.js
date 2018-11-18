@@ -1,22 +1,28 @@
 import React, { Component } from 'react';
 
 import './Message.css';
-import {getReadableSize, sendToServer} from '../../library.js';
+import {getReadableSize, getTime, sendToServer} from '../../library.js';
 
 class Message extends Component {
     constructor (props) {
         super(props);
         this.state = {
-            delivered: 'not yet'
+            delivered: 'not yet',
+            timeAndState: ''
         };
     }
 
+    // <img className='ResultImg' src='../img/done.png' alt=''/>
     sendAndUpdate(text, file) {
+        var timeAndState = <div>
+                               <div className='ResultTime'>{getTime()}</div>
+
+                           </div>;
         if (this.state.delivered === 'not yet') {
             this.setState({delivered: 'pending'});
             sendToServer(text, file).then (response => {
                 if (response) {
-                    this.setState({delivered: 'true'});
+                    this.setState({delivered: 'true', timeAndState: timeAndState});
                 } else {
                     this.setState({delivered: 'false'});
                 }
@@ -41,7 +47,10 @@ class Message extends Component {
             this.sendAndUpdate(text, '');
         }
         return (
-            <li className='Message'>{text}</li>
+            <li className='Message'>
+                {text}
+                {this.state.timeAndState}
+            </li>
         );
     }
 }

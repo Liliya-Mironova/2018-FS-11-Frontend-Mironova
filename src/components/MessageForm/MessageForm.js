@@ -26,7 +26,8 @@ class MessageForm extends Component {
         }
         function success (position) {
             var text = `${position.coords.latitude}, ${position.coords.longitude}`;
-            this.props.updateData(this.state.id, text, '', '');
+            this.props.updateData(this.state.id+1, text, '', '');
+            this.setState({id: this.state.id+1});
         };
         function error() {
             alert("Unable to retrieve your location");
@@ -43,7 +44,7 @@ class MessageForm extends Component {
         var reader = new FileReader();
         reader.onload = function() {
             if (file.type.startsWith('image/')) {
-                this_ptr.props.updateData(this_ptr.state.id+1, '', reader.result, ''); // кнопка меняет состояние App
+                this_ptr.props.updateData(this_ptr.state.id+1, '', reader.result, file); // кнопка меняет состояние App
             } else {
                 this_ptr.props.updateData(this_ptr.state.id+1, '', '', file);           
             }
