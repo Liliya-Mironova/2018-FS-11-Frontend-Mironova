@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import './MessageForm.css';
-
 import FormInput from '../FormInput/FormInput.js';
 
 class MessageForm extends Component {

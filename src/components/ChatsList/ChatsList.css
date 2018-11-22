@@ -1,0 +1,21 @@
+.ChatsList {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #CFFFC1;
+
+    display: flex;
+    /*justify-content: flex-end;*/
+    flex-direction: column;
+    vertical-align: bottom;
+}
+
+.Chat {
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: 14pt;
+    padding: 20px 20px 30px 12px;
+    background: white;
+    border: 1px solid rgba(25, 25, 25, 0.32);
+}
