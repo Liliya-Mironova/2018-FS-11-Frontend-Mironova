@@ -1,0 +1,68 @@
+.Message {
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 14pt;
+	color: black;
+	padding: 12px 12px 24px 12px;
+	clear: both;
+	border-radius: 10px 10px 0 10px;
+	float: right;
+	background: #00FF7F;
+	position: right;
+	margin: 3px 9px;
+	word-wrap: break-word;
+	word-break: break-all;
+
+	display: flex;
+	align-self: flex-end;
+	align-items: center;
+}
+
+.Img {
+    height: auto; 
+    width: auto; 
+    max-width: 400px; 
+    max-height: 400px;
+	z-index: 700;
+
+	padding: 12px 12px 24px 12px;
+	clear: both;
+	border-radius: 10px 10px 0 10px;
+	float: right;
+	background: #00FF7F;
+	position: right;
+	margin: 3px 9px;
+	word-wrap: break-word;
+	word-break: break-all;
+
+	display: flex;
+	align-self: flex-end;
+	align-items: center;
+}
+
+.ResultTime {
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 9pt;
+	color: grey;
+}
+
+.ResultImg {
+    height: auto; 
+    width: auto; 
+    max-width: 400px; 
+    max-height: 400px;
+	z-index: 700;
+
+	padding: 12px 12px 24px 12px;
+	clear: both;
+	border-radius: 10px 10px 0 10px;
+	float: right;
+	background: #00FF7F;
+	position: right;
+	margin: 3px 9px;
+	word-wrap: break-word;
+	word-break: break-all;
+
+	display: flex;
+	align-self: flex-end;
+	align-items: center;
+}
