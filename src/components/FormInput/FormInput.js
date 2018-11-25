@@ -1,36 +1,43 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 
 import './FormInput.css';
+import * as actionTypes from '../../store/actions/actionTypes';
+import {getTime, sendToServer} from '../../library.js';
+
 
 class FormInput extends Component {
-    constructor (props) {
-        super(props);
-        this.state = {
-            id: 0,
-            text: ''
-        };
+    state = {
+        text: ''
+    };
+
+    sendAndUpdate(text, file) {
+        sendToServer(text, file).then (response => {
+            if (response) {
+                this.props.handleSendToServer(getTime());
+            }
+        });
     }
 
-    _onSubmit (event) {
-        event.preventDefault();
-        if (this.state.text !== '') {
-            this.props.updateData(this.props.id+1, this.state.text, ''); // меняет состояние MessageForm
-            this.setState({id: this.props.id+1, text: ''});
-        }
-    }
-
-    _onInput (event) {
+    handleInput (event) {
         this.setState({text: event.target.value});
+    }
+
+    handleSubmit (event) {
+        event.preventDefault();
+        this.props.handleSubmitText(this.state.text);
+        this.sendAndUpdate(this.state.text, '');
+        this.setState({text: ''});
     }
 
     render() {
         return (
             <div>
-                <input className="Input" 
+                <input className="Input"
                        placeholder="Введите сообщение" 
-                       onInput={this._onInput.bind(this)} 
-                       value={this.state.text} />
-                <button className="SendButton" onClick={this._onSubmit.bind(this)}>
+                       value={this.state.text}
+                       onChange={this.handleInput.bind(this)} />
+                <button className="SendButton" onClick={this.handleSubmit.bind(this)}>
                     <img src="../img/send.png" alt='' />
                 </button>
             </div>
@@ -38,4 +45,11 @@ class FormInput extends Component {
     }
 }
 
-export default FormInput;
+const mapDispatchToProps = dispatch => {
+    return {
+        handleSubmitText: (text) => dispatch({type: actionTypes.SENDTEXT, text}),
+        handleSendToServer: (time) => dispatch({type: actionTypes.UPDATEDELIVER, time})
+    }
+};
+
+export default connect(null, mapDispatchToProps)(FormInput);

@@ -1,19 +1,22 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 
 import './MessageList.css';
-
 import Message from '../Message/Message.js';
+import * as actionTypes from '../../store/actions/actionTypes';
+import {getTime, sendToServer} from '../../library.js';
+
 
 class MessageList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            //id: 0,
-            msg_list: []
-        };
+    sendAndUpdate (text, file) {
+        sendToServer(text, file).then (response => {
+            if (response) {
+                this.props.handleSendToServer(getTime());
+            }
+        });
     }
 
-    _onDragOver (event) {
+    handleDragAndDrop (event) {
         event.preventDefault();
 
         var this_ptr = this;
@@ -24,37 +27,44 @@ class MessageList extends Component {
             var reader = new FileReader();
             reader.onload = function() {
                 if (file.type.startsWith('image/')) {
-                    this_ptr.props.updateData(this_ptr.props.id+1, '', reader.result, file); // кнопка меняет состояние App
+                    this_ptr.props.handleImgSelect(reader.result, file);
                 } else {
-                    this_ptr.props.updateData(this_ptr.props.id+1, '', '', file);           
+                    this_ptr.props.handleFileSelect(file);
                 }
+                this_ptr.sendAndUpdate('', file);
             };
             reader.readAsDataURL(file);
-            //this.setState({id: this_ptr.props.id+1});
         }
     }
-    
-    render() {
-        if (this.props.text || this.props.img || this.props.file) {
-            this.state.msg_list.push(<Message id={this.props.id}
-                                              text={this.props.text}
-                                              img={this.props.img}
-                                              file={this.props.file}
-                                              done={this.props.done}
-                                              key={this.props.id} />
-                                    );
-        }
 
+    render() {
         return (
-            <ul className="MessageList" done={this.state.done} 
-                             onDrop={this._onDragOver.bind(this)}
-                             onDragEnter={this._onDragOver.bind(this)}
-                             onDragOver={this._onDragOver.bind(this)}
-                             onDragLeave={this._onDragOver.bind(this)} >
-                {this.state.msg_list}
+            <ul className="MessageList" onDrop={this.handleDragAndDrop.bind(this)}
+                                        onDragEnter={this.handleDragAndDrop.bind(this)}
+                                        onDragOver={this.handleDragAndDrop.bind(this)}
+                                        onDragLeave={this.handleDragAndDrop.bind(this)} >
+                {this.props.msgList.map((msg, index) => {
+                    return (
+                        <Message key={index} id={index} text={msg.text} img={msg.img} file={msg.file}/>
+                    )
+                })}
             </ul>
-        );
+        )
     }
 }
 
-export default MessageList;
+const mapStateToProps = state => {
+    return {
+        msgList: state.msgRed.messageList
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        handleFileSelect: (file) => dispatch({type: actionTypes.SENDFILE, file}),
+        handleImgSelect: (img, file) => dispatch({type: actionTypes.SENDIMG, img, file}),
+        handleSendToServer: (time) => dispatch({type: actionTypes.UPDATEDELIVER, time})
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps) (MessageList);

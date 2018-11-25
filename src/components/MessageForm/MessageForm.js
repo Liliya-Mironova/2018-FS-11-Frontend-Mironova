@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 
 import './MessageForm.css';
 import FormInput from '../FormInput/FormInput.js';
+import * as actionTypes from '../../store/actions/actionTypes';
+import {getTime, sendToServer} from '../../library.js';
+
 
 class MessageForm extends Component {
-    constructor (props) {
-        super(props);
-        this.state = {
-            id: 0
-        };
+    sendAndUpdate (text, file) {
+        sendToServer(text, file).then (response => {
+            if (response) {
+                this.props.handleSendToServer(getTime());
+            }
+        });
     }
 
-    updateData (id, text) {
-        this.props.updateData(id, text, '');
-        this.setState({id: this.state.id+1});
-    }
-
-    _onLocationClick (event) {
+    handleLocationClick (event) {
         event.preventDefault();
 
         if (!navigator.geolocation) {
@@ -25,8 +25,8 @@ class MessageForm extends Component {
         }
         function success (position) {
             var text = `${position.coords.latitude}, ${position.coords.longitude}`;
-            this.props.updateData(this.state.id+1, text, '', '');
-            this.setState({id: this.state.id+1});
+            this.props.handleLocationSelect(text);
+            this.sendAndUpdate(text, '');
         };
         function error() {
             alert("Unable to retrieve your location");
@@ -34,7 +34,7 @@ class MessageForm extends Component {
         navigator.geolocation.getCurrentPosition(success.bind(this), error);
     }
 
-    _onFileSelect (event) {
+    handleFileClick (event) {
         event.preventDefault();
 
         var this_ptr = this;
@@ -43,11 +43,11 @@ class MessageForm extends Component {
         var reader = new FileReader();
         reader.onload = function() {
             if (file.type.startsWith('image/')) {
-                this_ptr.props.updateData(this_ptr.state.id+1, '', reader.result, file); // кнопка меняет состояние App
+                this_ptr.props.handleImgSelect(reader.result, file);
             } else {
-                this_ptr.props.updateData(this_ptr.state.id+1, '', '', file);           
+                this_ptr.props.handleFileSelect(file);
             }
-            this_ptr.setState({id: this_ptr.state.id+1});
+            this_ptr.sendAndUpdate('', file);
         };
         reader.readAsDataURL(file);
     }
@@ -55,16 +55,25 @@ class MessageForm extends Component {
     render() {
         return (
             <div>
-                <button className="LocationButton" onClick={this._onLocationClick.bind(this)}>
+                <button className="LocationButton" onClick={this.handleLocationClick.bind(this)}>
                     <img src="../img/location.png" alt=''/>
                 </button>
-                <input type="file" className="FileButton" onChange={this._onFileSelect.bind(this)} />
+                <input type="file" className="FileButton" onChange={this.handleFileClick.bind(this)} />
                 <form className="MessageForm">
-                    <FormInput id={this.state.id} updateData={this.updateData.bind(this)} />
+                    <FormInput />
                 </form>
             </div>
         );
     }
 }
 
-export default MessageForm;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        handleLocationSelect: (text) => dispatch({type: actionTypes.SENDTEXT, text}),
+        handleFileSelect: (file) => dispatch({type: actionTypes.SENDFILE, file}),
+        handleImgSelect: (img, file) => dispatch({type: actionTypes.SENDIMG, img, file}),
+        handleSendToServer: (time) => dispatch({type: actionTypes.UPDATEDELIVER, time})
+    }
+};
+
+export default connect(null, mapDispatchToProps) (MessageForm);

@@ -1,58 +1,28 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import './Message.css';
-import {getReadableSize, getTime, sendToServer} from '../../library.js';
+import {getReadableSize} from '../../library.js';
 
-class Message extends Component {
-    constructor (props) {
-        super(props);
-        this.state = {
-            delivered: 'not yet',
-            timeAndState: ''
-        };
-    }
 
-    // <img className='ResultImg' src='../img/done.png' alt=''/>
-    sendAndUpdate(text, file) {
-        var timeAndState = <div>
-                               <div className='ResultTime'>{getTime()}</div>
-
-                           </div>;
-        if (this.state.delivered === 'not yet') {
-            this.setState({delivered: 'pending'});
-            sendToServer(text, file).then (response => {
-                if (response) {
-                    this.setState({delivered: 'true', timeAndState: timeAndState});
-                } else {
-                    this.setState({delivered: 'false'});
-                }
-            });
-        }
-    }
-
-    render() {
-        var text = '';
-        var file = this.props.file;
-        if (file) {
-            this.sendAndUpdate('', file);
-            if (this.props.img) {
-                return (
-                    <img className='Img' src={this.props.img} alt=''/>
-                );
-            } else {
-                text =`${file.name}, ${file.type}, ${getReadableSize(file.size)}`;
-            }
+function Message (props) { 
+    var text = '';
+    var file = props.file;
+    if (file) {
+        if (props.img) {
+            return (
+                <img className='Img' src={props.img} alt=''/>
+            );
         } else {
-            text = this.props.text;
-            this.sendAndUpdate(text, '');
+            text =`${file.name}, ${file.type}, ${getReadableSize(file.size)}`;
         }
-        return (
-            <li className='Message'>
-                {text}
-                {this.state.timeAndState}
-            </li>
-        );
+    } else {
+        text = props.text;
     }
+    return (
+        <li className='Message'>
+            {text}
+        </li>
+    )
 }
 
 export default Message;
