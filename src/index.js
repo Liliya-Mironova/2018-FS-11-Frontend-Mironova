@@ -8,12 +8,14 @@ import App from './App';
 import messageListReducer from './store/reducers/messageList';
 import userReducer from './store/reducers/user';
 import chatListReducer from './store/reducers/chatList';
+import authReducer from './store/reducers/auth';
 
 
 const rootReducer = combineReducers({
 	msgRed: messageListReducer,
 	usrRed: userReducer,
-	сhatRed: chatListReducer
+	сhatRed: chatListReducer,
+	auth: authReducer
 });
 
 const store = createStore(rootReducer);
