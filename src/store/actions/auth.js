@@ -29,16 +29,15 @@ export const authSuccess = (token) => {
     }
 };
 
-export const authFailed = (err) => {
+export const authFailed = (error) => {
     return {
         type: actionTypes.AUTH_FAILED,
-        error: err,
+        error
     }
 };
 
 export const auth = (login, password) => {
     return dispatch => {
-        console.log('auth')
         dispatch(authStart());
         axios.post('/auth', {login, password})
         .then(response => {

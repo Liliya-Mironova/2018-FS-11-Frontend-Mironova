@@ -105,7 +105,7 @@ class Auth extends Component {
           />
       });
 
-    let redirect = null;
+/*    let redirect = null;
     if (this.props.token) {
       console.log('redirect to /about')
       redirect = <Redirect to='/about'/>
@@ -113,14 +113,12 @@ class Auth extends Component {
 
     if (this.props.error) {
 
-    }
+    }*/
 
     return (
       <form onSubmit={this.handleFormConfirm}>
         {inputs}
         <button disabled={!this.state.valid} type='submit' className='LogInButton'>Log in</button>
-        {this.props.token}
-        {redirect}
       </form>
     );
   }
