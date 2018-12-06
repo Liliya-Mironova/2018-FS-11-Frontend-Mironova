@@ -10,10 +10,8 @@ const initialStore = {
 };
 
 const reducer = (store=initialStore, action) => {
-/*    switch (action.type) {
-        case actionTypes.SENDTEXT:
-            return updateObject(store, {user: store.concat(
-                                {name: store.name, isAuthorized: store.isAuthorized})});
+/*	switch (action.type) {
+        case actionTypes.AUTHORIZATION : return updateObject(state, {isAuthorised: action.isAuthorised});
     }*/
     return store;
 };

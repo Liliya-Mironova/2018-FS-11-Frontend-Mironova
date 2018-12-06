@@ -11,6 +11,9 @@ class Header extends Component {
                     <Link to='/'>Back</Link>
                     <img className='ArrowBack' src='../img/arrow_back_24_px.png' alt='' />
                 </button>
+                <div className="Login">
+                  <Link to="/login">Login</Link>
+                </div>
             </header>
         );
     }

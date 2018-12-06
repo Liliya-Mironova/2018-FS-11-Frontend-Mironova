@@ -36,6 +36,17 @@ app.post('/message', function(req, res) {
         .catch((err) => res.status(500).send(err));
 });
 
+app.post('/check_login', function(req, res) {
+    var result = Promise.resolve();
+    if (typeof req.headers.origin === 'string') {
+        console.log(req.body);
+        res.set('Access-Control-Allow-Origin', req.headers.origin);
+    }
+    result
+        .then(() => res.send('{"status":"ok","token":"skjdhfksjd"}'))
+        .catch((err) => res.status(500).send(err));
+});
+
 app.listen('8082', function () {
     console.log('Listening on url http://127.0.0.8082');
 });
