@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Input from './../../components/Input/input';
 import {connect} from 'react-redux';
 import * as actions from '../../store/actions'
-import {Redirect} from 'react-router-dom';
 
 import './Auth.css';
 

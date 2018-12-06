@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import {connect} from 'react-redux';
 
 import './ChatsList.css';
-import * as actions from '../../store/actions';
 
 
 class ChatsList extends Component {

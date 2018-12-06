@@ -24,8 +24,8 @@ const reducer = (store=initialStore, action) => {
                                 {id: store.id+1, text: '', img: action.img, file: action.file, delivered: false})});
         case actionTypes.UPDATEDELIVER:
             return updateDeliver(store, action);
+        default: return store;
     }
-    return store;
 };
 
 export default reducer;
